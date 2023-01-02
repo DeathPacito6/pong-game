@@ -8,9 +8,13 @@ class Paddle:
         self.surface = surface
         self.width = 15
         self.height = 80
-        self.top = self.surface.get_height() / 2 - self.height / 2
         self.wallIndent = 30
+        self.leftPaddle = leftSide
+
+        self.top = self.surface.get_height() / 2 - self.height / 2
+        self.bottom = self.top + self.height
         self.left = self.wallIndent if leftSide else self.surface.get_width() - self.wallIndent - self.width
+        self.right = self.left + self.width
 
         self.upKey = upKey
         self.downKey = downKey
@@ -28,11 +32,15 @@ class Paddle:
         self.top -= self.moveSpeed
         if self.top < self.minY:
             self.top = self.minY
-    
+
+        self.bottom = self.top + self.height
+
     def down(self):
         self.top += self.moveSpeed
         if self.top + self.height> self.maxY:
             self.top = self.maxY - self.height
+
+        self.bottom = self.top + self.height
 
     def render(self):
         self.surface.blit(self.paddle, (self.left, self.top))
