@@ -1,1 +1,1 @@
-"venv/Scripts/python.exe" game.py
+".env/Scripts/python.exe" main.py
