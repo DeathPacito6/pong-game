@@ -2,10 +2,13 @@ import pygame
 import math
 import random
 
-class Puck:
-    def __init__(self, surface: pygame.Surface, target: int = 1):
-        self.surface = surface
+from GameComponents.Sounds import Sounds
 
+class Puck:
+    def __init__(self, surface: pygame.Surface, target: int = 1, sounds: Sounds = None):
+        self.sounds = sounds
+
+        self.surface = surface
         self.screenHeight = self.surface.get_height()
         self.screenWidth = self.surface.get_width()
 
@@ -38,16 +41,21 @@ class Puck:
 
     def render(self):
         self.surface.blit(self.puck, (self.left, self.top))  
+
+    def wallBounce(self):
+        self.speedY *= -1
+        if self.sounds:
+            self.sounds.playWallSound()
      
     # does not include left and right edge 
     def checkBoundsCollisions(self):
         if self.top < self.minY:
             self.top = self.minY
-            self.speedY *= -1
+            self.wallBounce()
 
         elif self.bottom > self.maxY:
             self.top = self.maxY - self.height
-            self.speedY *= -1
+            self.wallBounce()
         
         self.bottom = self.top + self.height
 
