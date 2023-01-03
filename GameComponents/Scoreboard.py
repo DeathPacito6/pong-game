@@ -14,7 +14,7 @@ class Scoreboard:
         self.scoreRight = 0
         self.maxScore = 10
         
-        self.font = pygame.font.Font(os.path.join("GameComponents", "bit5x3.ttf"), 64)
+        self.font = pygame.font.Font(os.path.join("resources", "bit5x3.ttf"), 64)
         self.update()
 
     def update(self):
