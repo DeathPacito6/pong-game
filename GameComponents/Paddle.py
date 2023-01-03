@@ -27,6 +27,7 @@ class Paddle:
 
         self.paddle = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         pygame.draw.rect(self.paddle, self.colour, pygame.Rect(0, 0, self.width, self.height))
+        self.paddle = self.paddle.convert()
 
     def up(self):
         self.top -= self.moveSpeed

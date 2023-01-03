@@ -15,6 +15,8 @@ class Game:
         self.leftPaddle = Paddle(surface, pygame.K_w, pygame.K_s)
         self.rightPaddle = Paddle(surface, pygame.K_UP, pygame.K_DOWN, False)
         self.puck = Puck(surface)
+        self.maxPuckSpeed = 7
+        self.puckSpeedIncrements = 0.3
 
         self.leftScore = 0
         self.rightScore = 0
@@ -31,8 +33,12 @@ class Game:
         if (checkX(self.puck.left) or checkX(self.puck.right)) and (checkY(self.puck.top) or checkY(self.puck.bottom)):
             self.puck.left = paddle.right if paddle.leftPaddle else paddle.left - self.puck.width
             self.puck.right = self.puck.left + self.puck.width
-            self.puck.horizontalMovement *= -1
-            self.puck.verticalMovement += random.randint(1, 2) * self.leftPaddle.direction
+            self.puck.speedX *= -1
+            self.puck.speedX += self.puckSpeedIncrements * self.puck.getDirection()
+            if abs(self.puck.speedX) > self.maxPuckSpeed:
+                self.puck.speedX = self.maxPuckSpeed * self.puck.getDirection()
+
+            self.puck.speedY += random.randint(1, 2) * self.leftPaddle.direction
             return True
         return False
     
@@ -57,4 +63,4 @@ class Game:
         self.checkPointScore()
 
         self.render()
-        print(f'\rScore:  {self.leftScore} | {self.rightScore}', end='    ')
+        # print(f'\rScore:  {self.leftScore} | {self.rightScore}', end='    ')
