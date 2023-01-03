@@ -13,14 +13,15 @@ class Game:
         self.screenWidth = self.surface.get_width()
         self.screenHeight = self.surface.get_height()
 
-        self.scoreLeft = self.scoreRight = 0
         self.leftPaddle = Paddle(surface, pygame.K_w, pygame.K_s)
         self.rightPaddle = Paddle(surface, pygame.K_UP, pygame.K_DOWN, False)
+        
         self.puck = Puck(surface)
         self.maxPuckSpeed = 7
         self.puckSpeedIncrements = 0.3
-
+        
         self.scoreboard = Scoreboard(self.surface, self)
+        self.winner = 0
 
     def render(self):
         self.leftPaddle.render()
@@ -53,7 +54,13 @@ class Game:
             self.scoreboard.pointLeft()
             self.puck = Puck(self.surface, -1)
 
+        self.winner = self.scoreboard.checkWinner()
+
     def update(self, events: list[pygame.event.Event]):
+        if self.winner:
+            self.render()
+            return
+
         self.leftPaddle.update(events)
         self.rightPaddle.update(events)
         self.puck.update()
@@ -61,8 +68,6 @@ class Game:
         if not self.checkPuckPaddleCollision(self.leftPaddle):
             self.checkPuckPaddleCollision(self.rightPaddle)
             # no need to check for both
-        
-        self.checkPointScore()
 
+        self.checkPointScore()
         self.render()
-        # print(f'\rScore:  {self.leftScore} | {self.rightScore}', end='    ')
