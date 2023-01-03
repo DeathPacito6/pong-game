@@ -50,14 +50,14 @@ class Paddle:
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == self.upKey:
-                    self.direction = 1
+                    self.direction += 1 if self.direction < 1 else 0
                 elif event.key == self.downKey:
-                    self.direction = -1
+                    self.direction += -1 if self.direction > -1 else 0
             if event.type == pygame.KEYUP:
-                if event.key == self.upKey and self.direction == 1:
-                    self.direction = 0
-                if event.key == self.downKey and self.direction == -1:
-                    self.direction = 0
+                if event.key == self.upKey:
+                    self.direction += -1 if self.direction > -1 else 0
+                if event.key == self.downKey:
+                    self.direction += 1 if self.direction < 1 else 0
 
         if self.direction == 1:
             self.up()
