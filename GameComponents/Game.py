@@ -1,7 +1,9 @@
 import pygame
+import os
 
 from GameComponents.Paddle import Paddle
 from GameComponents.Puck import Puck
+from GameComponents.Scoreboard import Scoreboard
 import random
 
 
@@ -18,13 +20,13 @@ class Game:
         self.maxPuckSpeed = 7
         self.puckSpeedIncrements = 0.3
 
-        self.leftScore = 0
-        self.rightScore = 0
+        self.scoreboard = Scoreboard(self.surface, self)
 
     def render(self):
         self.leftPaddle.render()
         self.rightPaddle.render()
         self.puck.render()
+        self.scoreboard.render()
 
     def checkPuckPaddleCollision(self, paddle: Paddle):
         checkX = lambda point: paddle.left < point < paddle.right
@@ -44,11 +46,11 @@ class Game:
     
     def checkPointScore(self):
         if self.puck.left < 0:
-            self.rightScore += 1
+            self.scoreboard.pointRight()
             self.puck = Puck(self.surface, 1)
 
         elif self.puck.right > self.screenWidth:
-            self.leftScore += 1
+            self.scoreboard.pointLeft()
             self.puck = Puck(self.surface, -1)
 
     def update(self, events: list[pygame.event.Event]):

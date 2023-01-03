@@ -19,7 +19,7 @@ FPS = 60
 
 while True:
     dt = clock.tick(FPS)
-    print(f'\rFPS: {clock.get_fps():.0f} dt: {dt} hSpeed: {game.puck.speedX:.2f} vSpeed: {game.puck.speedY:.2f} Score: {game.leftScore} | {game.rightScore}', end=' '*10)
+    print(f'\rFPS: {clock.get_fps():.0f} dt: {dt} hSpeed: {game.puck.speedX:.2f} vSpeed: {game.puck.speedY:.2f}', end=' '*10)
     events = pygame.event.get()
     
     screen.fill((0, 0, 0))
@@ -29,4 +29,4 @@ while True:
         if event.type == pygame.QUIT:
             sys.exit()
 
-    pygame.display.update()
+    pygame.display.flip()
