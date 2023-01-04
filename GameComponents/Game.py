@@ -9,15 +9,15 @@ import random
 
 
 class Game:
-    def __init__(self, surface: pygame.Surface, sounds: Sounds = None):
-        self.sounds = sounds
+    def __init__(self, surface: pygame.Surface, silent: bool = False ):
+        self.sounds = Sounds(silent)
         
         self.surface = surface
         self.screenWidth = self.surface.get_width()
         self.screenHeight = self.surface.get_height()
 
-        self.leftPaddle = Paddle(surface, pygame.K_w, pygame.K_s)
-        self.rightPaddle = Paddle(surface, pygame.K_UP, pygame.K_DOWN, False)
+        self.leftPaddle =  Paddle(surface, pygame.K_w, pygame.K_s)
+        self.rightPaddle =  Paddle(surface, pygame.K_UP, pygame.K_DOWN, False)
         
         self.newPuck()
         self.maxPuckSpeed = 7
@@ -48,26 +48,28 @@ class Game:
             if abs(self.puck.speedX) > self.maxPuckSpeed:
                 self.puck.speedX = self.maxPuckSpeed * self.puck.getDirection()
 
-            self.puck.speedY += random.randint(1, 2) * self.leftPaddle.direction
-            if self.sounds: 
-                self.sounds.playPaddleSound()
+            self.puck.speedY += random.randint(1, 2) * paddle.direction
+            self.sounds.playPaddleSound()
             return True
         return False
     
     def checkPointScore(self):
+        direction = 0
         if self.puck.left < 0:
             self.scoreboard.pointRight()
-            self.newPuck(1)
-            if self.sounds:
-                self.sounds.playScoreSound()
+            direction = 1
 
         elif self.puck.right > self.screenWidth:
             self.scoreboard.pointLeft()
-            self.newPuck(-1)
-            if self.sounds:
-                self.sounds.playScoreSound()
+            direction = -1
 
         self.winner = self.scoreboard.checkWinner()
+        if self.winner:
+            self.puck.left = 0 if direction == 1 else self.screenWidth - self.puck.width
+            return
+        if direction:
+            self.newPuck(direction)
+            self.sounds.playScoreSound()
 
     def update(self, events: list[pygame.event.Event]):
         if self.winner:

@@ -4,7 +4,6 @@ import sys
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 from GameComponents.Game import Game
-from GameComponents.Sounds import Sounds
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -14,8 +13,7 @@ icon = pygame.image.load(os.path.join("./", "icon.png"))
 pygame.display.set_caption("Pong!")
 pygame.display.set_icon(icon)
 
-sounds = Sounds()
-game = Game(screen, sounds)
+game = Game(screen)
 FPS = 60
 # game event loop
 

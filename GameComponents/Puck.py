@@ -44,8 +44,7 @@ class Puck:
 
     def wallBounce(self):
         self.speedY *= -1
-        if self.sounds:
-            self.sounds.playWallSound()
+        self.sounds.playWallSound()
      
     # does not include left and right edge 
     def checkBoundsCollisions(self):
