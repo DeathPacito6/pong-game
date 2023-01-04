@@ -33,8 +33,9 @@ class AlgorithmBrain:
     def renderPOI(self):
         if not self.POI:
             return
-        # self.game.surface.blit(self.redSquare, (self.paddle.left, self.POI))
-        self.game.surface.blit(self.greenSquare, (self.paddle.right, self.puckPredictedHeight))
+
+        xPos = self.paddle.right if self.paddle.leftPaddle else self.paddle.left - 10
+        self.game.surface.blit(self.greenSquare, (xPos, self.puckPredictedHeight))
 
     def checkReCalc(self):
         if self.game.puck.speedX * (1 if self.paddle.leftPaddle else -1) < 0:
@@ -49,7 +50,7 @@ class AlgorithmBrain:
         else:
             distance = self.paddle.left - self.game.puck.right
 
-        steps = distance / abs(self.game.puck.speedX)
+        steps = abs(distance / self.game.puck.speedX)
         predictedHeight = self.game.puck.top + steps * self.game.puck.speedY * -1
         
         usableScreenHeight = self.game.screenHeight - self.game.puck.height
@@ -72,8 +73,8 @@ class AlgorithmBrain:
 
         self.checkReCalc()
 
-        if (self.puckTrajectoryTowards and self.ReCalcPOI) or not self.POI:
-            self.POI = self.predictPuckPath()
+        if self.puckTrajectoryTowards: #(self.puckTrajectoryTowards and self.ReCalcPOI) or not self.POI:
+            self.POI = self.predictPuckPath() + 0.5
             self.POI = self.paddle.moveSpeed * round(self.POI / self.paddle.moveSpeed)
             self.ReCalcPOI = False
 

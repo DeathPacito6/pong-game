@@ -14,17 +14,24 @@ icon = pygame.image.load(os.path.join("./", "icon.png"))
 pygame.display.set_caption("Pong!")
 pygame.display.set_icon(icon)
 
-AIPaddle = ControlledPaddle(screen, True )
+AIPaddleLeft = ControlledPaddle(screen, True)
+AIPaddleRight = ControlledPaddle(screen, True, False)
 
-game = Game(screen, AIPaddle, silent=False)
-AIPaddle.assignGame(game)
+game = Game(screen, leftPaddle=AIPaddleLeft, rightPaddle=AIPaddleRight, silent=False)
+AIPaddleLeft.assignGame(game)
+AIPaddleRight.assignGame(game)
+
+# game = Game(screen)
 
 FPS = 60
 # game event loop
 
 while True:
     dt = clock.tick(FPS)
-    print(f'\rFPS: {clock.get_fps():.0f} dt: {dt} hSpeed: {game.puck.speedX:.2f} vSpeed: {game.puck.speedY:.2f}', end=' '*10)
+    hSpeed = f'{"+" if game.puck.speedX >= 0 else ""}{game.puck.speedX:.2f}'
+    vSpeed = f'{"+" if game.puck.speedY >= 0 else ""}{game.puck.speedY:.2f}'
+
+    print(f'\rFPS: {round(clock.get_fps()):04d} dt: {dt:02d} hSpeed: {hSpeed} vSpeed: {vSpeed}', end=' '*10)
     events = pygame.event.get()
     
     screen.fill((0, 0, 0))

@@ -8,8 +8,8 @@ if TYPE_CHECKING:
     from GameComponents.Game import Game
 
 class ControlledPaddle(Paddle):
-    def __init__(self, surface: pygame.Surface, CPU: bool):
-        super(ControlledPaddle, self).__init__(surface, leftSide=True, AIControlled=True)
+    def __init__(self, surface: pygame.Surface, CPU: bool, leftSide: bool = True):
+        super(ControlledPaddle, self).__init__(surface, leftSide=leftSide, AIControlled=True)
 
         self.CPU = CPU
         
@@ -29,11 +29,16 @@ class ControlledPaddle(Paddle):
     
     def moveToPOI(self):
         if not self.brain.POI:
+            self.direction = 0
             return
         if self.brain.POI < self.top:
             self.up()
+            self.direction = 1
         elif self.brain.POI > self.top:
             self.down()
+            self.direction = -1
+        else:
+            self.direction = 0
 
     def update(self, events):
         if not self.game: 
