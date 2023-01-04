@@ -4,6 +4,7 @@ import sys
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 from GameComponents.Game import Game
+from GameComponents.ControlledPaddle import ControlledPaddle
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -13,17 +14,22 @@ icon = pygame.image.load(os.path.join("./", "icon.png"))
 pygame.display.set_caption("Pong!")
 pygame.display.set_icon(icon)
 
-game = Game(screen)
+AIPaddle = ControlledPaddle(screen, True )
+
+game = Game(screen, AIPaddle, silent=True)
+AIPaddle.assignGame(game)
+
 FPS = 60
 # game event loop
 
 while True:
     dt = clock.tick(FPS)
-    print(f'\rFPS: {clock.get_fps():.0f} dt: {dt} hSpeed: {game.puck.speedX:.2f} vSpeed: {game.puck.speedY:.2f}', end=' '*10)
+    # print(f'\rFPS: {clock.get_fps():.0f} dt: {dt} hSpeed: {game.puck.speedX:.2f} vSpeed: {game.puck.speedY:.2f}', end=' '*10)
     events = pygame.event.get()
     
     screen.fill((0, 0, 0))
     game.update(events)
+
 
     for event in events:
         if event.type == pygame.QUIT:

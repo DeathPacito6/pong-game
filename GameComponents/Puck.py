@@ -44,6 +44,12 @@ class Puck:
 
     def wallBounce(self):
         self.speedY *= -1
+        if self.top < 0:
+            self.top = 0
+            self.bottom = self.top + self.height
+        elif self.bottom > self.screenHeight:
+            self.bottom = self.screenHeight
+            self.top = self.bottom - self.height
         self.sounds.playWallSound()
      
     # does not include left and right edge 

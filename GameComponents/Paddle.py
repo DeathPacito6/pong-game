@@ -4,11 +4,14 @@ import sys
 import pygame
 
 class Paddle:
-    def __init__(self, surface: pygame.Surface, upKey: str = None, downKey: str = None, leftSide: bool = True):
+    def __init__(self, surface: pygame.Surface, upKey = pygame.K_w, downKey = pygame.K_s, leftSide: bool = True, AIControlled = False):
         self.surface = surface
         self.width = 15
         self.height = 80
         self.wallIndent = 30
+
+        self.AIControlled = AIControlled
+
         self.leftPaddle = leftSide
 
         self.top = self.surface.get_height() / 2 - self.height / 2

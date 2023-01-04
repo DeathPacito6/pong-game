@@ -9,15 +9,15 @@ import random
 
 
 class Game:
-    def __init__(self, surface: pygame.Surface, silent: bool = False ):
+    def __init__(self, surface: pygame.Surface, leftPaddle: Paddle = None, rightPaddle: Paddle = None, silent: bool = False ):
         self.sounds = Sounds(silent)
         
         self.surface = surface
         self.screenWidth = self.surface.get_width()
         self.screenHeight = self.surface.get_height()
 
-        self.leftPaddle =  Paddle(surface, pygame.K_w, pygame.K_s)
-        self.rightPaddle =  Paddle(surface, pygame.K_UP, pygame.K_DOWN, False)
+        self.leftPaddle = leftPaddle if leftPaddle else Paddle(surface, pygame.K_w, pygame.K_s)
+        self.rightPaddle = rightPaddle if rightPaddle else Paddle(surface, pygame.K_UP, pygame.K_DOWN, False)
         
         self.newPuck()
         self.maxPuckSpeed = 7
