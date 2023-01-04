@@ -16,7 +16,7 @@ pygame.display.set_icon(icon)
 
 AIPaddle = ControlledPaddle(screen, True )
 
-game = Game(screen, AIPaddle, silent=True)
+game = Game(screen, AIPaddle, silent=False)
 AIPaddle.assignGame(game)
 
 FPS = 60
@@ -24,7 +24,7 @@ FPS = 60
 
 while True:
     dt = clock.tick(FPS)
-    # print(f'\rFPS: {clock.get_fps():.0f} dt: {dt} hSpeed: {game.puck.speedX:.2f} vSpeed: {game.puck.speedY:.2f}', end=' '*10)
+    print(f'\rFPS: {clock.get_fps():.0f} dt: {dt} hSpeed: {game.puck.speedX:.2f} vSpeed: {game.puck.speedY:.2f}', end=' '*10)
     events = pygame.event.get()
     
     screen.fill((0, 0, 0))

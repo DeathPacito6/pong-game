@@ -8,8 +8,8 @@ if TYPE_CHECKING:
     from GameComponents.Game import Game
 
 class ControlledPaddle(Paddle):
-    def __init__(self, surface: pygame.Surface, CPU: bool, leftSide: bool = True):
-        super(ControlledPaddle, self).__init__(surface, leftSide=leftSide, AIControlled=True)
+    def __init__(self, surface: pygame.Surface, CPU: bool):
+        super(ControlledPaddle, self).__init__(surface, leftSide=True, AIControlled=True)
 
         self.CPU = CPU
         
