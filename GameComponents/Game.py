@@ -66,6 +66,7 @@ class Game:
         self.winner = self.scoreboard.checkWinner()
         if self.winner:
             self.puck.left = 0 if direction == 1 else self.screenWidth - self.puck.width
+            self.sounds.playScoreSound()
             return
         if direction:
             self.newPuck(direction)
