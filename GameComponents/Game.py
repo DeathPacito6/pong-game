@@ -26,6 +26,8 @@ class Game:
         self.scoreboard = Scoreboard(self.surface, self)
         self.winner = 0
 
+        self.elapsedFrames = 0
+
     def newPuck(self, direction:int = 1):
         self.puck = Puck(self.surface, direction, self.sounds)
 
@@ -76,6 +78,8 @@ class Game:
         if self.winner:
             self.render()
             return
+
+        self.elapsedFrames += 1
 
         self.leftPaddle.update(events)
         self.rightPaddle.update(events)
