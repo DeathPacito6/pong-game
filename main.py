@@ -14,14 +14,16 @@ icon = pygame.image.load(os.path.join("./", "icon.png"))
 pygame.display.set_caption("Pong!")
 pygame.display.set_icon(icon)
 
-AIPaddleLeft = ControlledPaddle(screen, True)
-AIPaddleRight = ControlledPaddle(screen, True, False)
+AIPaddleLeft = ControlledPaddle(screen, True, True, True)
+AIPaddleLeft.brain.setDifficulty(1)
+
+AIPaddleRight = ControlledPaddle(screen, True, False, True)
+AIPaddleRight.brain.setDifficulty(1)
 
 game = Game(screen, leftPaddle=AIPaddleLeft, rightPaddle=AIPaddleRight, silent=False)
 AIPaddleLeft.assignGame(game)
 AIPaddleRight.assignGame(game)
 
-# game = Game(screen)
 
 FPS = 60
 # game event loop

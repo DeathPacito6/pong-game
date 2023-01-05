@@ -19,23 +19,35 @@ class AlgorithmBrain:
         self.puckTrajectoryTowards = False
         self.ReCalcPOI = False
 
-        self.redSquare = pygame.Surface((15, 15), pygame.SRCALPHA)
-        pygame.draw.rect(self.redSquare, (255, 0, 0), pygame.Rect(0, 0, 15, 15))
-        self.redSquare = self.redSquare.convert()
+        self.redSquare = self.newShape((255, 0, 0), (15, 5))
+        self.greenSquare = self.newShape((0, 255, 0), (10, 10))
+        self.blueSquare = self.newShape((0, 0, 255), (10, 10))
 
-        self.greenSquare = pygame.Surface((10, 10), pygame.SRCALPHA)
-        pygame.draw.rect(self.greenSquare, (0, 255, 0), pygame.Rect(0, 0, 10, 10))
-        self.greenSquare = self.greenSquare.convert()
+        self.difficulty = 0
+        self.movementCooldown = 0
 
     def assignGame(self, game: "Game"):
         self.game = game
+
+    def newShape(self, color, size = (10, 10)):
+        surface = pygame.Surface(size, pygame.SRCALPHA)
+        pygame.draw.rect(surface, color, pygame.Rect(0, 0, size[0], size[1]))
+        return surface.convert()
+
+    def setDifficulty(self, difficulty: list[0, 1, 2, 3] = 0):
+        if difficulty in [0, 1, 2, 3]:
+            self.difficulty = difficulty
 
     def renderPOI(self):
         if not self.POI:
             return
 
         xPos = self.paddle.right if self.paddle.leftPaddle else self.paddle.left - 10
-        self.game.surface.blit(self.greenSquare, (xPos, self.puckPredictedHeight))
+
+        self.game.surface.blit(self.redSquare, (self.paddle.left, self.POI))
+        self.game.surface.blit(self.blueSquare, (xPos, self.puckPredictedHeight))
+        self.game.surface.blit(self.greenSquare, (xPos, self.realPredictedHeight))
+
 
     def checkReCalc(self):
         if self.game.puck.speedX * (1 if self.paddle.leftPaddle else -1) < 0:
@@ -43,6 +55,16 @@ class AlgorithmBrain:
         else:
             self.puckTrajectoryTowards = False
             self.ReCalcPOI = True
+
+    def refitInScreen(self, value):
+        usableScreenHeight = self.game.screenHeight - self.game.puck.height
+
+        while value < 0 or value > usableScreenHeight:
+            if value < 0:
+                value *= -1
+            else:
+                value = 2 * usableScreenHeight - value
+        return value
 
     def predictPuckPath(self):
         if self.game.leftPaddle:
@@ -53,17 +75,24 @@ class AlgorithmBrain:
         steps = abs(distance / self.game.puck.speedX)
         predictedHeight = self.game.puck.top + steps * self.game.puck.speedY * -1
         
-        usableScreenHeight = self.game.screenHeight - self.game.puck.height
+        predictedHeight = self.refitInScreen(predictedHeight)
+        self.realPredictedHeight = round(predictedHeight)
 
-        while predictedHeight < 0 or predictedHeight > usableScreenHeight:
-            if predictedHeight < 0:
-                predictedHeight *= -1
-            else:
-                predictedHeight = 2 * usableScreenHeight - predictedHeight
-            
-        self.puckPredictedHeight = round(predictedHeight)
+        if self.difficulty > 0:
+            offset = round(self.paddle.height / 2  + [0, 9, 18, 30][self.difficulty])
+            predictedHeight += random.randint(-offset, offset)
+            predictedHeight = self.refitInScreen(predictedHeight)
+            self.puckPredictedHeight = predictedHeight
+        else:
+            self.puckPredictedHeight = predictedHeight
 
-        POI = self.puckPredictedHeight - self.paddle.height / 2 + self.game.puck.height / 2
+        POI = predictedHeight - self.paddle.height / 2 + self.game.puck.height / 2
+        if POI > self.game.screenHeight - self.paddle.height:
+            POI = self.game.screenHeight - self.paddle.height
+        elif POI < 0:
+            POI = 0
+
+        self.movementCooldown = random.randint(0, [0, 20, 30, 45][self.difficulty])
 
         return POI
 
@@ -73,7 +102,7 @@ class AlgorithmBrain:
 
         self.checkReCalc()
 
-        if self.puckTrajectoryTowards: #(self.puckTrajectoryTowards and self.ReCalcPOI) or not self.POI:
+        if (self.puckTrajectoryTowards and self.ReCalcPOI) or not self.POI:
             self.POI = self.predictPuckPath() + 0.5
             self.POI = self.paddle.moveSpeed * round(self.POI / self.paddle.moveSpeed)
             self.ReCalcPOI = False

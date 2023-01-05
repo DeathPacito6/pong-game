@@ -8,10 +8,11 @@ if TYPE_CHECKING:
     from GameComponents.Game import Game
 
 class ControlledPaddle(Paddle):
-    def __init__(self, surface: pygame.Surface, CPU: bool, leftSide: bool = True):
+    def __init__(self, surface: pygame.Surface, CPU: bool, leftSide: bool = True, debug: bool = False):
         super(ControlledPaddle, self).__init__(surface, leftSide=leftSide, AIControlled=True)
 
         self.CPU = CPU
+        self.debug = debug
         
         if self.CPU:
             self.brain = AlgorithmBrain(self)
@@ -25,9 +26,13 @@ class ControlledPaddle(Paddle):
 
     def render(self):
         super(ControlledPaddle, self).render()
-        self.brain.renderPOI()
+        if self.debug:
+            self.brain.renderPOI()
     
     def moveToPOI(self):
+        if self.CPU and self.brain.movementCooldown > 0:
+            self.brain.movementCooldown -= 1
+            return
         if not self.brain.POI:
             self.direction = 0
             return
