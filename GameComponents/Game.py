@@ -31,6 +31,10 @@ class Game:
     def newPuck(self, direction:int = 1):
         self.puck = Puck(self.surface, direction, self.sounds)
 
+    def toggleDebug(self):
+        self.leftPaddle.debug = not self.leftPaddle.debug
+        self.rightPaddle.debug = not self.rightPaddle.debug
+
     def render(self):
         self.leftPaddle.render()
         self.rightPaddle.render()
@@ -90,4 +94,3 @@ class Game:
             # no need to check for both
 
         self.checkPointScore()
-        self.render()

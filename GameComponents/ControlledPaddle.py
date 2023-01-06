@@ -33,7 +33,7 @@ class ControlledPaddle(Paddle):
         if self.CPU and self.brain.movementCooldown > 0:
             self.brain.movementCooldown -= 1
             return
-        if not self.brain.POI:
+        if self.brain.POI is None:
             self.direction = 0
             return
         if self.brain.POI < self.top:

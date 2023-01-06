@@ -17,7 +17,7 @@ pygame.display.set_icon(icon)
 
 
 
-menu = Menu(screen, clock, True)
+menu = Menu(screen, clock)
 
 
 while True:

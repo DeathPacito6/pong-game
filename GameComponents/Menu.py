@@ -28,12 +28,11 @@ class Menu:
         self.twoPlayerBtn = MenuButton(self.surface, "2 Player", self.smallFont, (200, 250)).centered()
 
         self.gameModeSelect = MenuButton(self.surface, "Select Gamemode", self.smallFont, (200, 145)).centered()
-        self.easyModeBtn = MenuButton(self.surface, "Prepare To Sigh", self.smallFont, (200, 210)).centered()
-        self.medModeBtn = MenuButton(self.surface, "Prepare To Cry", self.smallFont, (200, 260)).centered()
-        self.hardModeBtn = MenuButton(self.surface, "Prepare To Die", self.smallFont, (200, 310)).centered()
-        self.impossibleModeBtn = MenuButton(self.surface, "You Dare To Try?", self.smallFont, (200, 360)).centered()
+        self.easyModeBtn = MenuButton(self.surface, "Easy", self.smallFont, (200, 210)).centered()
+        self.medModeBtn = MenuButton(self.surface, "Medium", self.smallFont, (200, 260)).centered()
+        self.hardModeBtn = MenuButton(self.surface, "Hard", self.smallFont, (200, 310)).centered()
+        self.impossibleModeBtn = MenuButton(self.surface, "Impossible", self.smallFont, (200, 360)).centered()
         self.backButton = MenuButton(self.surface, "Back", self.smallFont, (200, 430)).centered()
-
 
         self.game: "Game" = None
 
@@ -42,9 +41,11 @@ class Menu:
         AIPaddle.brain.setDifficulty(difficulty)
         self.game = Game(self.surface, leftPaddle=AIPaddle)
         AIPaddle.assignGame(self.game)
+        self.game.puck.pauseFrames = 60
 
     def new2PGame(self):
         self.game = Game(self.surface)
+        self.game.puck.pauseFrames = 60
 
     def render(self):
         if self.game:
@@ -90,6 +91,11 @@ class Menu:
                         self.new1PGame(0)
                     elif self.backButton.rect.collidepoint(cursorPos):
                         self.page = 0
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_h:
+                    self.debug = not self.debug
+                    if self.game:
+                        self.game.toggleDebug()
         
         self.render()
 
