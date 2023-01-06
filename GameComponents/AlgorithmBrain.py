@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 class AlgorithmBrain:
     def __init__(self, paddle: "Paddle"):
         self.paddle = paddle
+        self.paddleJitter = False
 
         self.game = None
         
@@ -26,20 +27,26 @@ class AlgorithmBrain:
         self.difficulty = 0
         self.movementCooldown = 0
 
-    def assignGame(self, game: "Game"):
-        self.game = game
-
     def newShape(self, color, size = (10, 10)):
         surface = pygame.Surface(size, pygame.SRCALPHA)
         pygame.draw.rect(surface, color, pygame.Rect(0, 0, size[0], size[1]))
         return surface.convert()
+    
+    def assignGame(self, game: "Game"):
+        self.game = game
+        return self
 
     def setDifficulty(self, difficulty: list[0, 1, 2, 3] = 0):
         if difficulty in [0, 1, 2, 3]:
             self.difficulty = difficulty
+        return self
+    
+    def setJitter(self, jitter: bool = False):
+        self.paddleJitter = jitter
+        return self
 
     def renderPOI(self):
-        if not self.POI:
+        if self.POI is None:
             return
 
         xPos = self.paddle.right if self.paddle.leftPaddle else self.paddle.left - 10
@@ -102,9 +109,13 @@ class AlgorithmBrain:
 
         self.checkReCalc()
 
-        if (self.puckTrajectoryTowards and self.ReCalcPOI) or not self.POI:
-            self.POI = self.predictPuckPath() + 0.5
+        # print("\r", self.difficulty, self.puckTrajectoryTowards, self.ReCalcPOI, self.POI, end=' '*10)
+        if self.puckTrajectoryTowards and (self.ReCalcPOI or self.difficulty == 0):
+            self.POI = self.predictPuckPath()
             self.POI = self.paddle.moveSpeed * round(self.POI / self.paddle.moveSpeed)
+            if self.paddleJitter:
+                self.POI += 0.5
+
             self.ReCalcPOI = False
 
         return self.POI

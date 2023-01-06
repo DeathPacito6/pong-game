@@ -26,6 +26,8 @@ class Paddle:
         self.maxY = self.surface.get_height()
         self.minY = 0
 
+        self.debug = False # placeholder
+
         self.colour = (255, 255, 255)
 
         self.paddle = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
